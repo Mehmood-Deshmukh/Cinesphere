@@ -1,0 +1,15 @@
+@import '../../mixins.scss';
+
+.notFoundContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    Img{
+        height: 500px;
+        width: 100%;
+        margin-bottom: 280px;
+        @include md{
+            margin-bottom: 0;
+        }
+    }
+}

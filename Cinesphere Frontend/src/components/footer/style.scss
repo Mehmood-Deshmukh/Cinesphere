@@ -1,0 +1,52 @@
+@import "../../mixins.scss";
+.footer {
+    background: linear-gradient(
+        180deg,
+        rgba(26, 4, 45, 0) 0%,
+        var(--purple3) 79.17%
+      );
+    padding: 50px 0;
+    color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .contentWrapper {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        margin: 0 0 !important;
+    }
+    .socialIcons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all ease 0.3s;
+            &:hover {
+                box-shadow: 0 0 0.625em var(--purple-light);
+                color: var(--purple-light);
+            }
+        }
+        .username{
+            font-size: 12px;
+            line-height: 20px;
+            opacity: 0.5;
+            text-align: center;
+            max-width: 800px;
+            @include md {
+                font-size: 16px;
+            }
+        }
+    }
+}
