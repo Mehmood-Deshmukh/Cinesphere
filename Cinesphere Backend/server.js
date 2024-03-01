@@ -11,10 +11,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // MongoDB connection
-mongoose.connect(
-  process.env.MongoUrl,
-  { useNewUrlParser: true, useUnifiedTopology: true }
-);
+mongoose.connect(process.env.MongoUrl, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   about: { type: String },
   favoriteGenres: [JSON],
-  genres:[JSON],
+  genres: [JSON],
   watchlist: [
     {
       tmdbId: { type: Number, required: true },
@@ -76,28 +76,105 @@ app.post("/api/register", async (req, res) => {
   const { username, email, password, about, favoriteGenres } = req.body;
   console.log(req.body);
   try {
-     // Generate random avatar options
-     const accessoriesType = 'Blank';
-     const hairColor = getRandomOption(['Auburn', 'Black', 'Blonde', 'BlondeGolden', 'Brown', 'BrownDark', 'PastelPink', 'Platinum', 'Red', 'SilverGray']);
-     const facialHairType = 'Blank'
-     const facialHairColor = getRandomOption(['Auburn', 'Black', 'Blonde', 'BlondeGolden', 'Brown', 'BrownDark', 'Platinum', 'Red']);
-     const clotheType = getRandomOption(['BlazerShirt', 'BlazerSweater', 'CollarSweater', 'GraphicShirt', 'Hoodie', 'Overall', 'ShirtCrewNeck', 'ShirtScoopNeck', 'ShirtVNeck']);
-     const clotheColor = getRandomOption(['Black', 'Blue01', 'Blue02', 'Blue03', 'Gray01', 'Gray02', 'Heather', 'PastelBlue', 'Pink', 'Red', 'White']);
-     const eyeType = 'Happy'
-     const eyebrowType = 'RaisedExcited';
-     const mouthType = 'Smile'
-     const skinColor = getRandomOption(['Tanned', 'Pale', 'Light', 'Brown',]);
- 
-     // Construct avatar URL
-     const avatarUrl = `https://avataaars.io//?avatarStyle=Circle&accessoriesType=${accessoriesType}&hairColor=${hairColor}&facialHairType=${facialHairType}&facialHairColor=${facialHairColor}&clotheType=${clotheType}&clotheColor=${clotheColor}&eyeType=${eyeType}&eyebrowType=${eyebrowType}&mouthType=${mouthType}&skinColor=${skinColor}`;
+    // Generate random avatar options
+    const topType = getRandomOption([
+      "NoHair",
+      "LongHairBigHair",
+      "LongHairBob",
+      "LongHairBun",
+      "LongHairCurly",
+      "LongHairCurvy",
+      "LongHairDreads",
+      "LongHairFrida",
+      "LongHairFro",
+      "LongHairFroBand",
+      "LongHairNotTooLong",
+      "LongHairShavedSides",
+      "LongHairMiaWallace",
+      "LongHairStraight",
+      "LongHairStraight2",
+      "LongHairStraightStrand",
+      "ShortHairDreads01",
+      "ShortHairDreads02",
+      "ShortHairFrizzle",
+      "ShortHairShaggyMullet",
+      "ShortHairShortCurly",
+      "ShortHairShortFlat",
+      "ShortHairShortRound",
+      "ShortHairShortWaved",
+      "ShortHairSides",
+      "ShortHairTheCaesar",
+      "ShortHairTheCaesarSidePart",
+    ]);
+    const accessoriesType = "Blank";
+    const hairColor = getRandomOption([
+      "Auburn",
+      "Black",
+      "Blonde",
+      "BlondeGolden",
+      "Brown",
+      "BrownDark",
+      "PastelPink",
+      "Platinum",
+      "Red",
+      "SilverGray",
+    ]);
+    const facialHairType = "Blank";
+    const facialHairColor = getRandomOption([
+      "Auburn",
+      "Black",
+      "Blonde",
+      "BlondeGolden",
+      "Brown",
+      "BrownDark",
+      "Platinum",
+      "Red",
+    ]);
+    const clotheType = getRandomOption([
+      "BlazerShirt",
+      "BlazerSweater",
+      "CollarSweater",
+      "GraphicShirt",
+      "Hoodie",
+      "Overall",
+      "ShirtCrewNeck",
+      "ShirtScoopNeck",
+      "ShirtVNeck",
+    ]);
+    const clotheColor = getRandomOption([
+      "Black",
+      "Blue01",
+      "Blue02",
+      "Blue03",
+      "Gray01",
+      "Gray02",
+      "Heather",
+      "PastelBlue",
+      "Pink",
+      "Red",
+      "White",
+    ]);
+    const eyeType = "Happy";
+    const eyebrowType = "RaisedExcited";
+    const mouthType = "Smile";
+    const skinColor = getRandomOption(["Tanned", "Pale", "Light", "Brown"]);
 
+    // Construct avatar URL
+    const avatarUrl = `https://avataaars.io//?avatarStyle=Circle&topType=${topType}&accessoriesType=${accessoriesType}&hairColor=${hairColor}&facialHairType=${facialHairType}&facialHairColor=${facialHairColor}&clotheType=${clotheType}&clotheColor=${clotheColor}&eyeType=${eyeType}&eyebrowType=${eyebrowType}&mouthType=${mouthType}&skinColor=${skinColor}`;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: "User already registered!" });
     }
 
-    const user = new User({ username, email, password, about, favoriteGenres, avatarUrl });
+    const user = new User({
+      username,
+      email,
+      password,
+      about,
+      favoriteGenres,
+      avatarUrl,
+    });
     await user.save();
     res.status(200).json({ message: "User registered successfully!" });
   } catch (error) {
@@ -105,7 +182,6 @@ app.post("/api/register", async (req, res) => {
     res.status(500).json({ error: "Failed to register user!" });
   }
 });
-
 
 // Login user
 app.post("/api/login", async (req, res) => {
@@ -126,7 +202,6 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-
 // Fetch user data by ID
 app.get("/api/user/:userId", async (req, res) => {
   const userId = req.params.userId;
@@ -142,11 +217,19 @@ app.get("/api/user/:userId", async (req, res) => {
   }
 });
 
-
 // Add media to watchlist
 app.post("/api/user/:userId/watchlist", async (req, res) => {
   const userId = req.params.userId;
-  const { Type, Id, poster_path, release_date, vote_average, media_type, watched , genre} = req.body;
+  const {
+    Type,
+    Id,
+    poster_path,
+    release_date,
+    vote_average,
+    media_type,
+    watched,
+    genre,
+  } = req.body;
 
   try {
     const user = await User.findById(userId);
@@ -164,14 +247,23 @@ app.post("/api/user/:userId/watchlist", async (req, res) => {
 
     // If movie doesn't exist, add it to the watchlist
 
-
     //valid Genres because Some specifuc Genres Cause the Api Request To Not send Any Reuslt
     //Found out they are the ones with a five-digit ID or a space in the name
 
-    const validGenres = genre.filter(g => !/\s/.test(g.name) && g.id.toString().length !== 5);
+    const validGenres = genre.filter(
+      (g) => !/\s/.test(g.name) && g.id.toString().length !== 5
+    );
     user.genres = [...user.genres, ...validGenres];
 
-    user.watchlist.push({ tmdbId: Id, title: Type, poster_path, release_date, vote_average, media_type, watched });
+    user.watchlist.push({
+      tmdbId: Id,
+      title: Type,
+      poster_path,
+      release_date,
+      vote_average,
+      media_type,
+      watched,
+    });
     await user.save();
     console.log("Media added to watchlist successfully");
     res
@@ -183,34 +275,35 @@ app.post("/api/user/:userId/watchlist", async (req, res) => {
   }
 });
 
-
 // Logout user
 app.post("/api/logout", (req, res) => {
-  //removing the userID from Local Storage from frontend while logging out 
+  //removing the userID from Local Storage from frontend while logging out
   res.status(200).json({ message: "Logout successful" });
 });
 
-app.patch('/api/user/:userId/watchlist/:tmdbId', async (req, res) => {
+app.patch("/api/user/:userId/watchlist/:tmdbId", async (req, res) => {
   const { userId, tmdbId } = req.params;
   const { watched } = req.body;
 
   try {
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
-    const movieIndex = user.watchlist.findIndex(movie => movie.tmdbId == tmdbId);
+    const movieIndex = user.watchlist.findIndex(
+      (movie) => movie.tmdbId == tmdbId
+    );
     if (movieIndex === -1) {
-      return res.status(404).json({ error: 'Movie not found in watchlist' });
+      return res.status(404).json({ error: "Movie not found in watchlist" });
     }
 
     user.watchlist[movieIndex].watched = watched;
     await user.save();
 
-    res.json({ message: 'Watchlist updated successfully' });
+    res.json({ message: "Watchlist updated successfully" });
   } catch (error) {
-    console.error('Error updating watchlist:', error);
-    res.status(500).json({ error: 'Server error' });
+    console.error("Error updating watchlist:", error);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
