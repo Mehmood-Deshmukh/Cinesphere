@@ -41,6 +41,7 @@ const userSchema = new mongoose.Schema({
       watched: { type: Boolean, default: false },
     },
   ],
+  avatarUrl: { type: String },
 });
 
 userSchema.pre("save", async function (next) {
@@ -66,18 +67,37 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Routes
+const getRandomOption = (options) => {
+  return options[Math.floor(Math.random() * options.length)];
+};
 
 // Register user
 app.post("/api/register", async (req, res) => {
   const { username, email, password, about, favoriteGenres } = req.body;
   console.log(req.body);
   try {
+     // Generate random avatar options
+     const accessoriesType = 'Blank';
+     const hairColor = getRandomOption(['Auburn', 'Black', 'Blonde', 'BlondeGolden', 'Brown', 'BrownDark', 'PastelPink', 'Platinum', 'Red', 'SilverGray']);
+     const facialHairType = 'Blank'
+     const facialHairColor = getRandomOption(['Auburn', 'Black', 'Blonde', 'BlondeGolden', 'Brown', 'BrownDark', 'Platinum', 'Red']);
+     const clotheType = getRandomOption(['BlazerShirt', 'BlazerSweater', 'CollarSweater', 'GraphicShirt', 'Hoodie', 'Overall', 'ShirtCrewNeck', 'ShirtScoopNeck', 'ShirtVNeck']);
+     const clotheColor = getRandomOption(['Black', 'Blue01', 'Blue02', 'Blue03', 'Gray01', 'Gray02', 'Heather', 'PastelBlue', 'Pink', 'Red', 'White']);
+     const eyeType = 'Happy'
+     const eyebrowType = 'RaisedExcited';
+     const mouthType = 'Smile'
+     const skinColor = getRandomOption(['Tanned', 'Pale', 'Light', 'Brown',]);
+ 
+     // Construct avatar URL
+     const avatarUrl = `https://avataaars.io//?avatarStyle=Circle&accessoriesType=${accessoriesType}&hairColor=${hairColor}&facialHairType=${facialHairType}&facialHairColor=${facialHairColor}&clotheType=${clotheType}&clotheColor=${clotheColor}&eyeType=${eyeType}&eyebrowType=${eyebrowType}&mouthType=${mouthType}&skinColor=${skinColor}`;
+
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: "User already registered!" });
     }
 
-    const user = new User({ username, email, password, about, favoriteGenres });
+    const user = new User({ username, email, password, about, favoriteGenres, avatarUrl });
     await user.save();
     res.status(200).json({ message: "User registered successfully!" });
   } catch (error) {

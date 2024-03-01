@@ -92,25 +92,40 @@ const ProfilePage = () => {
         {!loading && <Img src={background} />}
       </div>
       <div className="opacity-layer"></div>
-      <div className="profile-info">
-        <p>
-          <strong>Username:</strong> {userData?.username}
-        </p>
-        <p>
-          <strong>Email:</strong> {userData?.email}
-        </p>
-        <p>
-          <strong>About:</strong> {userData?.about}
-        </p>
-        <p>
-          <strong>Favorite Genres:</strong>{" "}
-          {userData?.favoriteGenres?.map((genre) => genre.label).join(", ")}
-        </p>
-        <button onClick={handleLogout}>Logout</button>
+      <div className="profile-box-container">
+        <aside class="profile-card">
+          <header>
+            <a href="">
+              <img src={userData?.avatarUrl || "https://avataaars.io/?accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&facialHairColor=Platinum&clotheType=ShirtScoopNeck&clotheColor=White&eyeType=Happy&eyebrowType=RaisedExcited&mouthType=Smile&skinColor=Light"} class="hoverZoomLink" />
+            </a>
+
+            <h1>{userData?.username}</h1>
+
+            <h2>{userData?.email}</h2>
+          </header>
+
+          <div class="profile-bio">
+            <div>
+              <h3>About Me:</h3>
+              <p>{userData?.about}</p>
+            </div>
+            <div>
+              <h3>Favorite Genres</h3>
+              <p>
+                {userData?.favoriteGenres
+                  ?.map((genre) => genre.label)
+                  .join(", ")}
+              </p>
+            </div>
+            <button onClick={handleLogout}>Logout</button>
+          </div>
+        </aside>
       </div>
       <ToastContainer position="top-center" />
       <div className="watchList">
-        <h1>{`${userData?.username}'s WatchList`}</h1>
+        <h1
+          style={{ fontSize: "2rem", fontWeight: "bold" }}
+        >{`${userData?.username}'s WatchList`}</h1>
         <div className="watchlistItems">
           {userData?.watchlist?.map((movie) => (
             <React.Fragment key={movie.tmdbId}>
